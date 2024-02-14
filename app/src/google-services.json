@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "293947331849",
+    "project_id": "hola-chatapp-158e5",
+    "storage_bucket": "hola-chatapp-158e5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293947331849:android:4bea53804840d974c12fd8",
+        "android_client_info": {
+          "package_name": "com.example.hola_compose_chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDS4OQ_auHh5AvlyTRdYGoZWaizB0xv1Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

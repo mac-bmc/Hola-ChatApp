@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Hola </string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="signup">SignUp</string>
+    <string name="Login">Login</string>
+    <string name="title_activity_login">LoginActivity</string>
+</resources>
