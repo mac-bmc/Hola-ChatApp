@@ -7,28 +7,44 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface AuthRepository {
-    suspend fun signUp(email: String, password: String): Either<Boolean>
-    suspend fun login(username: String, password: String): Either<Boolean>
+    suspend fun signUp(email: String, password: String): Either<String>
+    suspend fun login(email: String, password: String): Either<String>
+    suspend fun isLogged():Boolean
 }
 
 
 class AuthDataRepository @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) : AuthRepository {
-    override suspend fun signUp(email: String, password: String): Either<Boolean> {
+    override suspend fun signUp(email: String, password: String): Either<String> {
         return try {
-           val authResult =  firebaseAuth.createUserWithEmailAndPassword(email, password).await()
-            Either.Success(true)
+            val authResult = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+            Either.Success("Success")
+        } catch (e: Exception) {
+            Log.d("authExc", e.toString())
+            Either.Failed(e.toString())
+        }
+    }
+
+    override suspend fun login(email: String, password: String): Either<String> {
+        return try {
+            firebaseAuth.signInWithEmailAndPassword(email.trim(), password.trim()).await()
+            Either.Success("Success")
+        } catch (e: Exception) {
+            Log.d("authExc", e.toString())
+            Either.Failed(e.toString())
+        }
+    }
+
+    override suspend fun isLogged(): Boolean {
+        return try {
+            firebaseAuth.currentUser!=null
         }
         catch (e:Exception)
         {
-            Log.d("authExc",e.toString())
-            Either.Failed(e.toString())
+            Log.d("isLogged",e.toString())
+            false
+        }
     }
-}
-
-override suspend fun login(username: String, password: String): Either<Boolean> {
-    TODO("Not yet implemented")
-}
 
 }

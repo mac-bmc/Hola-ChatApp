@@ -25,6 +25,4 @@ object AuthModule {
     @Provides
     fun provideAuthRepository(impl:AuthDataRepository):AuthRepository = impl
 
-    @Provides
-    fun provideSignUpUseCase(userSignUpUseCase: UserSignUpUseCase):UserSignUpUseCase = userSignUpUseCase
 }

@@ -31,13 +31,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.hola_compose_chatapp.R
 import com.example.hola_compose_chatapp.feature.auth.AuthViewModel
+import com.example.hola_compose_chatapp.ui.atoms.CustomProgressIndicator
 import com.example.hola_compose_chatapp.ui.atoms.CustomTextField
 
 @Composable
-fun Login(navController: NavController,authViewModel: AuthViewModel) {
-    var name = remember { mutableStateOf("") }
+
+fun Login(navController: NavController, authViewModel: AuthViewModel) {
+    var email = remember { mutableStateOf("") }
     var password = remember {
-        mutableStateOf("")
+        mutableStateOf("") }
+    var isLoading  = remember {
+        mutableStateOf(false)
     }
     // A surface container using the 'background' color from the theme
     Box(
@@ -52,6 +56,10 @@ fun Login(navController: NavController,authViewModel: AuthViewModel) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if(isLoading.value){
+                CustomProgressIndicator()
+                Spacer(modifier = Modifier.height(30.dp))
+            }
             Text(
                 text = stringResource(id = R.string.app_name),
                 style = TextStyle(
@@ -69,7 +77,7 @@ fun Login(navController: NavController,authViewModel: AuthViewModel) {
                     )
             )
             Spacer(modifier = Modifier.height(30.dp))
-            CustomTextField(hint = stringResource(id = R.string.username), name)
+            CustomTextField(hint = stringResource(id = R.string.username), email)
             Spacer(modifier = Modifier.height(10.dp))
             CustomTextField(hint = stringResource(id = R.string.password), password)
             Spacer(modifier = Modifier.height(20.dp))
@@ -79,19 +87,23 @@ fun Login(navController: NavController,authViewModel: AuthViewModel) {
             ) {
                 Button(
                     onClick = {
+                        authViewModel.login(email.value, password.value)
+                        isLoading.value = true
                     },
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.height(35.dp)
 
                 ) {
                     Text(
-                        text = stringResource(id = R.string.signup),
+                        text = stringResource(id = R.string.Login),
                         style = TextStyle(color = Color.White)
                     )
                 }
-                ClickableText(text = AnnotatedString(stringResource(id = R.string.signup)), onClick ={
-                    navController.navigate("signup")
-                } )
+                ClickableText(
+                    text = AnnotatedString(stringResource(id = R.string.signup)),
+                    onClick = {
+                        navController.navigate("signup")
+                    })
 
             }
         }

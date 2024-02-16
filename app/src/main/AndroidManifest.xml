@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".utils.HolaChatApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -11,11 +12,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HolaComposeChatApp"
-        tools:targetApi="31">
+        tools:targetApi="34">
+        <activity
+            android:name=".feature.home.HomeActivity"
+            android:exported="false"
+            android:label="@string/title_activity_home"
+            android:theme="@style/Theme.HolaComposeChatApp" />
         <activity
             android:name=".feature.auth.AuthActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_main"
             android:theme="@style/Theme.HolaComposeChatApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -31,19 +32,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.hola_compose_chatapp.R
 import com.example.hola_compose_chatapp.feature.auth.AuthViewModel
+import com.example.hola_compose_chatapp.ui.atoms.CustomProgressIndicator
 import com.example.hola_compose_chatapp.ui.atoms.CustomTextField
 
 @Composable
 fun SignUp(navController: NavController,authViewModel: AuthViewModel) {
-    var name = remember { mutableStateOf("") }
+    var email = remember { mutableStateOf("") }
     var password = remember {
         mutableStateOf("")
+    }
+    var isLoading  = remember {
+        mutableStateOf(false)
     }
     // A surface container using the 'background' color from the theme
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(color = colorResource(id = R.color.bg_color)),
     ) {
         Column(
             modifier = Modifier
@@ -52,10 +57,15 @@ fun SignUp(navController: NavController,authViewModel: AuthViewModel) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if(isLoading.value){
+                CustomProgressIndicator()
+                Spacer(modifier = Modifier.height(30.dp))
+            }
             Text(
                 text = stringResource(id = R.string.app_name),
                 style = TextStyle(
-                    fontSize = 20.sp,
+                    color = colorResource(id = R.color.white),
+                    fontSize = 24.sp,
                     fontStyle = FontStyle.Italic,
                     fontFamily = FontFamily.Serif
                 )
@@ -69,7 +79,7 @@ fun SignUp(navController: NavController,authViewModel: AuthViewModel) {
                     )
             )
             Spacer(modifier = Modifier.height(30.dp))
-            CustomTextField(hint = stringResource(id = R.string.username), name)
+            CustomTextField(hint = stringResource(id = R.string.username), email)
             Spacer(modifier = Modifier.height(10.dp))
             CustomTextField(hint = stringResource(id = R.string.password), password)
             Spacer(modifier = Modifier.height(20.dp))
@@ -79,7 +89,8 @@ fun SignUp(navController: NavController,authViewModel: AuthViewModel) {
             ) {
                 Button(
                     onClick = {
-                              authViewModel.signUp(name.value,password.value)
+                              isLoading.value = true
+                              authViewModel.signUp(email.value,password.value)
                     },
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.height(35.dp)
@@ -90,7 +101,7 @@ fun SignUp(navController: NavController,authViewModel: AuthViewModel) {
                         style = TextStyle(color = Color.White)
                     )
                 }
-                ClickableText(text = AnnotatedString(stringResource(id = R.string.Login)), onClick ={
+                ClickableText(style = TextStyle(color = colorResource(id = R.color.white)),text = AnnotatedString(stringResource(id = R.string.Login)), onClick ={
                     navController.navigate("login")
                 } )
 
