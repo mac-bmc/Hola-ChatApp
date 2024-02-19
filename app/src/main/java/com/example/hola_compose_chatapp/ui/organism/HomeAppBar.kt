@@ -20,7 +20,8 @@ import com.example.hola_compose_chatapp.R
 @Composable
 fun CustomAppBar()
 {
-    TopAppBar(title = { Text(
+    TopAppBar(
+        title = { Text(
         modifier = Modifier
             .fillMaxWidth()
             .height(30.dp),

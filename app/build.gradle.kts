@@ -70,11 +70,13 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("com.google.firebase:firebase-firestore:24.10.2")
+    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
@@ -93,6 +95,8 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.16.0")//Glide
 
     implementation("io.coil-kt:coil-compose:2.5.0")//Coil
+
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     /*implementation("com.squareup.retrofit2:retrofit:2.9.0")//retrofit,okttp and moshi
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))

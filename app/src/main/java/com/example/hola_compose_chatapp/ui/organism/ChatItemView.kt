@@ -1,5 +1,6 @@
 package com.example.hola_compose_chatapp.ui.organism
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,10 +25,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.hola_compose_chatapp.R
+import com.example.hola_compose_chatapp.feature.home.HomeViewModel
 import com.example.hola_compose_chatapp.model.ChatItemModel
 
 @Composable
-fun ChatItemRow(chatItem: ChatItemModel) {
+fun ChatItemRow(chatItem: ChatItemModel,viewModel:HomeViewModel) {
     val painter = rememberAsyncImagePainter(model = chatItem.senderInfo.profileImage)
     Card(
         elevation = CardDefaults.cardElevation(
@@ -35,9 +37,11 @@ fun ChatItemRow(chatItem: ChatItemModel) {
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { /* Handle click on chat item */ }
             .padding(10.dp)
             .background(color = colorResource(id = R.color.white))
+            .clickable {  viewModel.openChatView()
+            Log.d("Clicked","CardChat")}
+
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

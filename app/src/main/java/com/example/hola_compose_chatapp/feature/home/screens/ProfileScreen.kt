@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.hola_compose_chatapp.feature.home.HomeViewModel
 import com.example.hola_compose_chatapp.model.ChatItemModel
 import com.example.hola_compose_chatapp.model.UserModel
 import com.example.hola_compose_chatapp.ui.organism.ChatItemRow
@@ -15,7 +16,7 @@ import com.example.hola_compose_chatapp.ui.organism.CustomAppBar
 import com.example.hola_compose_chatapp.ui.organism.CustomHomeBottomBar
 
 @Composable
-fun ProfileScreen(navController: NavController)
+fun ProfileScreen(navController: NavController,homeViewModel: HomeViewModel)
 {
     Scaffold(
         topBar = { CustomAppBar()},
@@ -27,11 +28,7 @@ fun ProfileScreen(navController: NavController)
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            ChatItemRow(
-                chatItem = ChatItemModel(
-                    UserModel("", "Mac", ""), "Hi How r u", "10.00AM"
-                )
-            )
+
         }
     }
 }
