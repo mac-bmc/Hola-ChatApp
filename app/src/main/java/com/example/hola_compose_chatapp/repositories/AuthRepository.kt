@@ -10,6 +10,7 @@ interface AuthRepository {
     suspend fun signUp(email: String, password: String): Either<String>
     suspend fun login(email: String, password: String): Either<String>
     suspend fun isLogged():Boolean
+     fun getCurrentUserId():String
 }
 
 
@@ -45,6 +46,10 @@ class AuthDataRepository @Inject constructor(
             Log.d("isLogged",e.toString())
             false
         }
+    }
+
+    override  fun getCurrentUserId(): String {
+        return firebaseAuth.currentUser!!.uid
     }
 
 }

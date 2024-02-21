@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -35,12 +36,17 @@ fun ChatItemRow(chatItem: ChatItemModel,viewModel:HomeViewModel) {
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
         ),
+        colors = CardDefaults.cardColors(
+            colorResource(id = R.color.white)
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp)
-            .background(color = colorResource(id = R.color.white))
-            .clickable {  viewModel.openChatView()
-            Log.d("Clicked","CardChat")}
+            .clickable {
+                viewModel.openChatView()
+                Log.d("Clicked", "CardChat")
+            },
+        shape = RoundedCornerShape(20.dp)
 
     ) {
         Row(

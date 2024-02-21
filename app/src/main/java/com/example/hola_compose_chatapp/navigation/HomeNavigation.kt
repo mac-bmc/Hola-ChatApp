@@ -9,6 +9,7 @@ import com.example.hola_compose_chatapp.feature.auth.screens.Login
 import com.example.hola_compose_chatapp.feature.auth.screens.SignUp
 import com.example.hola_compose_chatapp.feature.home.HomeViewModel
 import com.example.hola_compose_chatapp.feature.home.screens.HomeChatList
+import com.example.hola_compose_chatapp.feature.home.screens.HomeSearch
 import com.example.hola_compose_chatapp.feature.home.screens.ProfileScreen
 
 @Composable
@@ -21,6 +22,9 @@ fun HomeNavHost(homeViewModel: HomeViewModel){
         }
         composable("profile") {
             ProfileScreen(navController,homeViewModel)
+        }
+        composable("search"){
+            HomeSearch(navController,homeViewModel)
         }
     }
 }

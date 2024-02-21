@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hola_compose_chatapp.model.UserModel
 import com.example.hola_compose_chatapp.repositories.AuthRepository
-import com.example.hola_compose_chatapp.repositories.FirebaseRepository
+import com.example.hola_compose_chatapp.repositories.FirestoreRepository
 import com.example.hola_compose_chatapp.useCases.AddUserToDBUseCase
 import com.example.hola_compose_chatapp.useCases.IsUserLoggedIn
 import com.example.hola_compose_chatapp.useCases.UserLoginUseCase
@@ -20,12 +20,12 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     authRepository: AuthRepository,
-    firebaseRepository: FirebaseRepository
+    firestoreRepository: FirestoreRepository
 ) : ViewModel() {
     private val signUpUseCase = UserSignUpUseCase(authRepository)
     private val loginUseCase = UserLoginUseCase(authRepository)
 
-    private val addUserToDbUseCase = AddUserToDBUseCase(firebaseRepository)
+    private val addUserToDbUseCase = AddUserToDBUseCase(firestoreRepository)
     private val isUserLoggedIn = IsUserLoggedIn(authRepository)
     private val _signUpState = MutableLiveData<Either<String>>()
     val signUpState = _signUpState

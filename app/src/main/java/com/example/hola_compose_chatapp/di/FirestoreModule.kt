@@ -1,7 +1,7 @@
 package com.example.hola_compose_chatapp.di
 
-import com.example.hola_compose_chatapp.repositories.FirebaseDataRepository
-import com.example.hola_compose_chatapp.repositories.FirebaseRepository
+import com.example.hola_compose_chatapp.repositories.FirestoreDataRepository
+import com.example.hola_compose_chatapp.repositories.FirestoreRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -18,5 +18,5 @@ object FirestoreModule {
     fun provideFirestore():FirebaseFirestore = FirebaseFirestore.getInstance()
 
     @Provides
-    fun provideFirestoreRepository(repository:FirebaseDataRepository):FirebaseRepository = repository
+    fun provideFirestoreRepository(repository:FirestoreDataRepository):FirestoreRepository = repository
 }
