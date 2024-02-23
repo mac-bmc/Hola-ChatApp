@@ -1,5 +1,6 @@
 package com.example.hola_compose_chatapp.useCases
 
+import android.util.Log
 import com.example.hola_compose_chatapp.model.UserModel
 import com.example.hola_compose_chatapp.repositories.AuthRepository
 import com.example.hola_compose_chatapp.repositories.FirestoreRepository
@@ -11,6 +12,7 @@ class GetCurrentUserUseCase(
 ) {
 
     suspend fun execute(): Either<UserModel> {
+        Log.d("SendMessage","currentuserusecase")
         return when (val response = firestoreRepository.getUserInfo(executeGetUserUid())) {
             is Either.Failed -> {
                 Either.Failed(response.msg)
@@ -25,7 +27,8 @@ class GetCurrentUserUseCase(
         }
     }
 
-    private fun executeGetUserUid(): String {
+     fun executeGetUserUid(): String {
+         Log.d("SendMessage","currentuseridusecse")
         return authRepository.getCurrentUserId()
     }
 }

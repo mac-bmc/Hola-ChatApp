@@ -53,6 +53,7 @@ fun ChatView(chatViewModel: ChatViewModel) {
             "",
             "Hello",
             "10.00 AM",
+            0,
             UserModel("", "Manu", ""),
             false,
             UserModel("", "Manu", ""),
@@ -61,7 +62,28 @@ fun ChatView(chatViewModel: ChatViewModel) {
         MessageModel(
             "",
             "Hello",
+            "10.00 AM",
+            0,
+            UserModel("", "Manu", ""),
+            false,
+            UserModel("", "Manu", ""),
+            false
+        ),
+        MessageModel(
             "",
+            "Hello",
+            "10.00 AM",
+            0,
+            UserModel("", "Manu", ""),
+            false,
+            UserModel("", "Manu", ""),
+            false
+        ),
+        MessageModel(
+            "",
+            "Hello",
+            "10.00 AM",
+            0,
             UserModel("", "Manu", ""),
             true,
             UserModel("", "Manu", ""),
@@ -70,7 +92,8 @@ fun ChatView(chatViewModel: ChatViewModel) {
         MessageModel(
             "",
             "Hello",
-            "",
+            "10.00 AM",
+            0,
             UserModel("", "Manu", ""),
             true,
             UserModel("", "Manu", ""),
@@ -79,21 +102,14 @@ fun ChatView(chatViewModel: ChatViewModel) {
         MessageModel(
             "",
             "Hello",
-            "",
+            "10.00 AM",
+            0,
             UserModel("", "Manu", ""),
             false,
             UserModel("", "Manu", ""),
             false
         ),
-        MessageModel(
-            "",
-            "Hello",
-            "",
-            UserModel("", "Manu", ""),
-            false,
-            UserModel("", "Manu", ""),
-            false
-        )
+
     )
     Scaffold(
         topBar = {

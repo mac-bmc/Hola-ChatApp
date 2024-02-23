@@ -11,6 +11,7 @@ import javax.inject.Inject
 
 interface FirestoreRepository {
     suspend fun addToUsers(user: UserModel): Either<Boolean>
+    suspend fun getAllUsers(): Either<List<UserModel>>
     suspend fun getMessages(): Either<List<MessageModel>>
     suspend fun getUserInfo(userId: String): Either<UserModel?>
     suspend fun sendMessages(messageModel: MessageModel): Either<Boolean>
@@ -46,7 +47,41 @@ class FirestoreDataRepository
         return status
     }
 
+    override suspend fun getAllUsers(): Either<List<UserModel>> {
+        val userList = mutableListOf<UserModel>()
+        var response = 0
+        val doc = firestore.collection("users")
+        try {
+            val receiveSnap = Tasks.await(
+                doc.get()
+                    .addOnCompleteListener {
+                        if (it.isSuccessful)
+                            it.result
+                    }
+
+            )
+            receiveSnap.let {
+                for (doc in it.documents) {
+                    val data = doc.toObject(UserModel::class.java)
+                    if (data != null) {
+                        response = 200
+                        userList.add(data)
+                    }
+                }
+            }
+
+
+        } catch (e: Exception) {
+            Log.e("toUser", "$e")
+
+        }
+        if (response != 200)
+            return Either.Failed("DB ERROR")
+        return Either.Success(userList)
+    }
+
     override suspend fun getMessages(): Either<List<MessageModel>> {
+        val recieverList = mutableListOf<MessageModel>()
         val messageList = mutableListOf<MessageModel>()
         var response = 0
         val doc = firestore.collection("messages")
@@ -64,9 +99,14 @@ class FirestoreDataRepository
                     val data = doc.toObject(MessageModel::class.java)
                     if (data != null) {
                         response = 200
-                        messageList.add(data)
+                        recieverList.add(data)
                     }
                 }
+            }
+
+            recieverList.forEach {
+                if (it.receiveUser.uid == currentUser!!.uid || it.sendUser.uid == currentUser!!.uid)
+                    messageList.add(it)
             }
 
 
@@ -74,21 +114,26 @@ class FirestoreDataRepository
             Log.e("toUser", "$e")
 
         }
+        recieverList.clear()
+
         if (response != 200)
             return Either.Failed("DB ERROR")
         return Either.Success(messageList)
     }
 
     override suspend fun getUserInfo(userId: String): Either<UserModel?> {
-        val response = 0
+        Log.d("SendMessage", "@@userINFo$userId")
+        var response = 0
         var user: UserModel? = UserModel("", "", "")
         val doc = firestore.collection("users").document(userId)
         try {
             val receiveSnap = Tasks.await(
                 doc.get()
                     .addOnCompleteListener {
-                        if (it.isSuccessful)
+                        if (it.isSuccessful) {
                             it.result
+                            response = 200
+                        }
                     }
 
             )
@@ -99,6 +144,7 @@ class FirestoreDataRepository
             Log.e("toUser", "$e")
 
         }
+        Log.d("SendMessage", "@@userINFo" + user.toString())
         if (response != 200)
             return Either.Failed("DB ERROR")
         return Either.Success(user)

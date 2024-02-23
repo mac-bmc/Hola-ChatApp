@@ -44,7 +44,7 @@ fun HomeSearch(navController: NavController, homeViewModel: HomeViewModel) {
     val searchText = remember {
         mutableStateOf(TextFieldValue(""))
     }
-    val userResult = listOf<ChatItemModel>(
+    /*val userResult = listOf<ChatItemModel>(
         ChatItemModel(
             UserModel("", "Mac", ""), listOf(), "Hi How r u", "10.00AM"
         ),
@@ -53,7 +53,7 @@ fun HomeSearch(navController: NavController, homeViewModel: HomeViewModel) {
         ), ChatItemModel(
             UserModel("", "Mac", ""), listOf(), "Hi How r u", "10.00AM"
         )
-    )
+    )*/
     Scaffold(
         containerColor = colorResource(id = R.color.bg_color),
         modifier = Modifier
@@ -112,11 +112,11 @@ fun HomeSearch(navController: NavController, homeViewModel: HomeViewModel) {
                 verticalArrangement = Arrangement.SpaceEvenly
             )
             {
-                items(userResult)
+                /*items(userResult)
                 { user ->
                     ChatItemRow(chatItem = user, viewModel = homeViewModel)
 
-                }
+                }*/
             }
 
         }

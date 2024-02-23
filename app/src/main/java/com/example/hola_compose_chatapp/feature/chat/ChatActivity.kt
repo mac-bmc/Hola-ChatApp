@@ -13,6 +13,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.example.hola_compose_chatapp.feature.chat.screens.ChatView
 import com.example.hola_compose_chatapp.feature.chat.ui.theme.HolaComposeChatAppTheme
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 
 class ChatActivity : ComponentActivity() {
     private lateinit var chatViewModel: ChatViewModel

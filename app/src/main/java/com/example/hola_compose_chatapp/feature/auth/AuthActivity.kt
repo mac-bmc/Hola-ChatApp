@@ -19,12 +19,18 @@ class AuthActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        //syncData()
         attachObservers()
         setContent {
             HolaComposeChatAppTheme {
                 AuthNavHost(authViewModel)
             }
         }
+    }
+
+    private fun syncData() {
+        authViewModel.syncHolaUsers()
+        authViewModel.syncMessages()
     }
 
     private fun attachObservers() {
@@ -34,36 +40,37 @@ class AuthActivity : ComponentActivity() {
     private fun attachAuthSuccessObserver() {
         authViewModel.signUpState.observe(this@AuthActivity)
         { signUpState ->
-            when(signUpState)
-            {
+            when (signUpState) {
                 is Either.Success -> {
-                    startActivity(Intent(this@AuthActivity,HomeActivity::class.java))
+                    startActivity(Intent(this@AuthActivity, HomeActivity::class.java))
                 }
+
                 is Either.Failed -> {
-                    Toast.makeText(this,signUpState.msg,Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, signUpState.msg, Toast.LENGTH_LONG).show()
                 }
-                else ->{}
+
+                else -> {}
             }
 
         }
         authViewModel.loginState.observe(this@AuthActivity)
         { loginState ->
-            when(loginState)
-            {
+            when (loginState) {
                 is Either.Success -> {
-                    startActivity(Intent(this@AuthActivity,HomeActivity::class.java))
+                    startActivity(Intent(this@AuthActivity, HomeActivity::class.java))
                 }
+
                 is Either.Failed -> {
-                    Toast.makeText(this,loginState.msg,Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, loginState.msg, Toast.LENGTH_LONG).show()
                 }
-                else ->{}
+
+                else -> {}
             }
 
         }
         authViewModel.isLoggedIn()
-        authViewModel.isLoggedIn.observe(this){isLoggedIn->
-            if(isLoggedIn)
-            {
+        authViewModel.isLoggedIn.observe(this) { isLoggedIn ->
+            if (isLoggedIn) {
                 val intent = Intent(this, HomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
@@ -73,7 +80,6 @@ class AuthActivity : ComponentActivity() {
     }
 
 }
-
 
 
 

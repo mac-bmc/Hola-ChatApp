@@ -73,9 +73,9 @@ fun ChatItemRow(chatItem: ChatItemModel,viewModel:HomeViewModel) {
                     text = chatItem.senderInfo.userName,
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = chatItem.lastMsg)
+                //Text(text = chatItem.lastMsg)
             }
-            Text(text = chatItem.lastMsgTime)
+            //Text(text = chatItem.lastMsgTime)
         }
     }
 }
