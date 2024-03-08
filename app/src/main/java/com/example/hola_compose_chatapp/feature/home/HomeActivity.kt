@@ -7,10 +7,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.example.hola_compose_chatapp.R
 import com.example.hola_compose_chatapp.feature.chat.ChatActivity
@@ -28,8 +24,8 @@ class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-        getData()
         attachObservers()
+        homeViewModel.syncEzKartMapping()
         setContent {
             HolaComposeChatAppTheme {
                 HomeNavHost(homeViewModel)
@@ -37,18 +33,33 @@ class HomeActivity : ComponentActivity() {
         }
     }
 
-    private fun getData() {
-        homeViewModel.getChatItemList()
-    }
 
     private fun attachObservers() {
         observeChatOpen()
-        observeUserSync()
+        observeExecMapping()
         observeMessageSync()
+    }
+
+    private fun observeExecMapping() {
+        homeViewModel.mapSyncStatus.observe(this) { mapSync ->
+            Log.d("SyncMap","SyncMapToSyncMessageObs")
+            when (mapSync) {
+                true -> {
+                    Log.d("SyncMap","SyncMapToSyncMessage")
+                    homeViewModel.syncMessages()
+                }
+
+                false -> {
+                    Toast.makeText(this, getString(R.string.error_sync_msg), Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+        }
     }
 
     private fun observeMessageSync() {
         homeViewModel.messageSyncStatus.observe(this) { syncStatus ->
+            Log.d("SyncMMMM","messageSync")
             when (syncStatus) {
                 is Either.Failed -> {
                     Toast.makeText(this, getString(R.string.error_sync_msg), Toast.LENGTH_LONG)
@@ -56,6 +67,8 @@ class HomeActivity : ComponentActivity() {
                 }
 
                 is Either.Success -> {
+                    Log.d("ChatMessage","act")
+                    homeViewModel.getChatItem()
 
                 }
             }
@@ -63,21 +76,6 @@ class HomeActivity : ComponentActivity() {
         }
     }
 
-    private fun observeUserSync() {
-        homeViewModel.userSyncStatus.observe(this) { syncStatus ->
-            when (syncStatus) {
-                is Either.Failed -> {
-                    Toast.makeText(this, getString(R.string.error_sync_msg), Toast.LENGTH_LONG)
-                        .show()
-                }
-
-                is Either.Success -> {
-
-                }
-            }
-
-        }
-    }
 
     private fun observeChatOpen() {
         homeViewModel.chatViewOpen.observe(this) { shouldOpen ->
@@ -109,7 +107,7 @@ class HomeActivity : ComponentActivity() {
         pauseDataSync()
     }*/
 
-    private fun pauseDataSync() {
+    /*private fun pauseDataSync() {
         syncRunnable?.let {
             handler.removeCallbacks(it)
         }
@@ -120,7 +118,6 @@ class HomeActivity : ComponentActivity() {
             override fun run() {
                 try {
                     homeViewModel.syncMessages()
-                    homeViewModel.syncHolaUsers()
                 } catch (e: Exception) {
                     Log.d("TIMER", e.toString())
                 } finally {
@@ -130,23 +127,9 @@ class HomeActivity : ComponentActivity() {
 
         }
         handler.postDelayed(syncRunnable!!, 30000L)
-    }
+    }*/
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    HolaComposeChatAppTheme {
-        Greeting("Android")
-    }
-}
 
 

@@ -13,7 +13,8 @@ interface MessageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun receiveMessage(messageList: List<MessageModel>)
 
-    @Query("SELECT * FROM  MessageReciever WHERE _sendUser_uid=:secondUserUUID OR _sendUser_uid=:currentUserID ORDER BY timeStamp ASC")
+    @Query("SELECT * FROM  MessageReciever WHERE sendUserId=:secondUserUUID OR " +
+            "sendUserId=:currentUserID ORDER BY timeStamp ASC")
     suspend fun getMessages(secondUserUUID: String, currentUserID: String): List<MessageModel>
 
     @Query("DELETE FROM MessageReciever")

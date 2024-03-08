@@ -1,8 +1,8 @@
 package com.example.hola_compose_chatapp.model
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "MessageReciever")
 data class MessageModel(
@@ -11,11 +11,10 @@ data class MessageModel(
     val content: String = "",
     val sentTime: String = "",
     val timeStamp: Int? = 0,
-    @Embedded(prefix = "_sendUser_")
-    val sendUser: UserModel = UserModel("", "", ""),
+    val sendUserId: String = "",
     val isSendByMe: Boolean = false,
-    @Embedded
-    val receiveUser: UserModel = UserModel("", "", ""),
-    val readStatus: Boolean? = false
-)
+    val receiveUserId: String = ""
+): Serializable {
+    constructor() : this("","", "",0,"",false,"")
+}
 

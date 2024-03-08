@@ -4,16 +4,23 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.hola_compose_chatapp.model.ExecutiveModel
+import com.example.hola_compose_chatapp.model.MappedExecModel
 import com.example.hola_compose_chatapp.model.MessageModel
-import com.example.hola_compose_chatapp.model.UserModel
 
 
-@Database(entities = [MessageModel::class,UserModel::class], version = 2, exportSchema = false)
+@Database(
+    entities = [MessageModel::class, ExecutiveModel::class, MappedExecModel::class],
+    version = 2,
+    exportSchema = false
+)
 
 abstract class HolaLocalDb : RoomDatabase() {
 
     abstract fun messageDao(): MessageDao
-    abstract fun userDao():UserDao
+    abstract fun userDao(): UserDao
+    abstract fun mappingDao():MappingDao
+
     companion object {
         @Volatile
         private var INSTANCE: HolaLocalDb? = null

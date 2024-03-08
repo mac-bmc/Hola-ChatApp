@@ -38,7 +38,6 @@ import androidx.constraintlayout.compose.Dimension
 import com.example.hola_compose_chatapp.R
 import com.example.hola_compose_chatapp.feature.chat.ChatViewModel
 import com.example.hola_compose_chatapp.model.MessageModel
-import com.example.hola_compose_chatapp.model.UserModel
 import com.example.hola_compose_chatapp.ui.molecules.ChatBubble
 import com.example.hola_compose_chatapp.ui.molecules.MessageBox
 
@@ -54,62 +53,55 @@ fun ChatView(chatViewModel: ChatViewModel) {
             "Hello",
             "10.00 AM",
             0,
-            UserModel("", "Manu", ""),
+            "",
             false,
-            UserModel("", "Manu", ""),
-            false
+            ""
         ),
         MessageModel(
             "",
             "Hello",
             "10.00 AM",
             0,
-            UserModel("", "Manu", ""),
+            "",
             false,
-            UserModel("", "Manu", ""),
-            false
+            ""
         ),
         MessageModel(
             "",
             "Hello",
             "10.00 AM",
             0,
-            UserModel("", "Manu", ""),
+            "",
             false,
-            UserModel("", "Manu", ""),
-            false
+            ""
         ),
         MessageModel(
             "",
             "Hello",
             "10.00 AM",
             0,
-            UserModel("", "Manu", ""),
-            true,
-            UserModel("", "Manu", ""),
-            false
-        ),
-        MessageModel(
             "",
-            "Hello",
-            "10.00 AM",
-            0,
-            UserModel("", "Manu", ""),
-            true,
-            UserModel("", "Manu", ""),
-            false
-        ),
-        MessageModel(
-            "",
-            "Hello",
-            "10.00 AM",
-            0,
-            UserModel("", "Manu", ""),
             false,
-            UserModel("", "Manu", ""),
-            false
+            ""
         ),
-
+        MessageModel(
+            "",
+            "Hello",
+            "10.00 AM",
+            0,
+            "",
+            false,
+            ""
+        ),
+        MessageModel(
+            "",
+            "Hello",
+            "10.00 AM",
+            0,
+            "",
+            false,
+            ""
+        ),
     )
     Scaffold(
         topBar = {
@@ -192,7 +184,7 @@ fun ChatView(chatViewModel: ChatViewModel) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
-                .fillMaxWidth(), text = text,chatViewModel)
+                .fillMaxWidth(), text = text, chatViewModel)
 
         }
 

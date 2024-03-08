@@ -27,6 +27,10 @@ object HolaLocalDBModule {
 
     @Provides
     @Singleton
+    fun provideMappingDao(database: HolaLocalDb) = database.mappingDao()
+
+    @Provides
+    @Singleton
     fun provideUserDao(database:HolaLocalDb) = database.userDao()
 
     @Provides

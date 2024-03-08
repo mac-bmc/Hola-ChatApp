@@ -31,7 +31,7 @@ import com.example.hola_compose_chatapp.model.ChatItemModel
 
 @Composable
 fun ChatItemRow(chatItem: ChatItemModel,viewModel:HomeViewModel) {
-    val painter = rememberAsyncImagePainter(model = chatItem.senderInfo.profileImage)
+    val painter = rememberAsyncImagePainter(model = chatItem.senderInfo.userImg)
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp

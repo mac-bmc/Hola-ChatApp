@@ -1,34 +1,48 @@
+@file:Suppress("NAME_SHADOWING")
+
 package com.example.hola_compose_chatapp.repositories
 
 import android.util.Log
+import com.example.hola_compose_chatapp.model.ExecutiveModel
+import com.example.hola_compose_chatapp.model.MappedExecModel
 import com.example.hola_compose_chatapp.model.MessageModel
-import com.example.hola_compose_chatapp.model.UserModel
 import com.example.hola_compose_chatapp.utils.Either
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 interface FirestoreRepository {
-    suspend fun addToUsers(user: UserModel): Either<Boolean>
-    suspend fun getAllUsers(): Either<List<UserModel>>
-    suspend fun getMessages(): Either<List<MessageModel>>
-    suspend fun getUserInfo(userId: String): Either<UserModel?>
+    suspend fun addToUsers(execModel: ExecutiveModel): Either<Boolean>
+    suspend fun getAllUsers(): Either<List<ExecutiveModel>>
+    suspend fun syncMessages(sendUserId: String)
+    suspend fun getUserInfo(execId: String): Either<ExecutiveModel?>
     suspend fun sendMessages(messageModel: MessageModel): Either<Boolean>
+    suspend fun getExecMap()
+
 }
 
 class FirestoreDataRepository
-@Inject constructor(private val firestore: FirebaseFirestore, val firebaseAuth: FirebaseAuth) :
+@Inject constructor(
+    private val firestore: FirebaseFirestore,
+    private val firebaseAuth: FirebaseAuth
+) :
     FirestoreRepository {
 
+    companion object {
+        val messageFlow = MutableStateFlow<List<MessageModel>>(listOf())
+        val mapFlow = MutableStateFlow<MappedExecModel?>(null)
+    }
+
     private val currentUser = firebaseAuth.currentUser
-    override suspend fun addToUsers(user: UserModel): Either<Boolean> {
+    override suspend fun addToUsers(execModel: ExecutiveModel): Either<Boolean> {
         var status: Either<Boolean> = Either.Success(true)
         Log.d("currentUser", currentUser?.email.toString())
-        val doc = firestore.collection("users").document(firebaseAuth.currentUser!!.uid)
+        val doc = firestore.collection("executive").document(firebaseAuth.currentUser!!.uid)
         try {
             val procedure = Tasks.await(
-                doc.set(user)
+                doc.set(execModel)
                     .addOnSuccessListener {
 
                         Log.d("success", "$status")
@@ -39,7 +53,7 @@ class FirestoreDataRepository
 
                     }
             )
-            val x = procedure.hashCode()
+            procedure.hashCode()
         } catch (e: Exception) {
             Log.e("toUser", "$e")
 
@@ -47,10 +61,10 @@ class FirestoreDataRepository
         return status
     }
 
-    override suspend fun getAllUsers(): Either<List<UserModel>> {
-        val userList = mutableListOf<UserModel>()
+    override suspend fun getAllUsers(): Either<List<ExecutiveModel>> {
+        val userList = mutableListOf<ExecutiveModel>()
         var response = 0
-        val doc = firestore.collection("users")
+        val doc = firestore.collection("EzKart-exe")
         try {
             val receiveSnap = Tasks.await(
                 doc.get()
@@ -62,7 +76,7 @@ class FirestoreDataRepository
             )
             receiveSnap.let {
                 for (doc in it.documents) {
-                    val data = doc.toObject(UserModel::class.java)
+                    val data = doc.toObject(ExecutiveModel::class.java)
                     if (data != null) {
                         response = 200
                         userList.add(data)
@@ -80,52 +94,35 @@ class FirestoreDataRepository
         return Either.Success(userList)
     }
 
-    override suspend fun getMessages(): Either<List<MessageModel>> {
-        val recieverList = mutableListOf<MessageModel>()
-        val messageList = mutableListOf<MessageModel>()
-        var response = 0
-        val doc = firestore.collection("messages")
-        try {
-            val receiveSnap = Tasks.await(
-                doc.get()
-                    .addOnCompleteListener {
-                        if (it.isSuccessful)
-                            it.result
-                    }
+    override suspend fun syncMessages(sendUserId: String) {
+        Log.d("SyncMessagesUID",sendUserId)
+        val doc =
+            firestore.collection("messages-executive").document(firebaseAuth.currentUser!!.uid)
+                .collection(sendUserId)
 
-            )
-            receiveSnap.let {
-                for (doc in it.documents) {
-                    val data = doc.toObject(MessageModel::class.java)
-                    if (data != null) {
-                        response = 200
-                        recieverList.add(data)
-                    }
+        try {
+            doc.addSnapshotListener { value, error ->
+                error.let {
+                    Log.d("SyncMessages", it.toString())
+                }
+                value.let {
+                    Log.d("SyncMessages", it!!.documents.size.toString())
+                    val data = value?.toObjects(MessageModel::class.java)
+                    Log.d("SyncMessages", data.toString())
+                    messageFlow.value = data!!
+
+
                 }
             }
-
-            recieverList.forEach {
-                if (it.receiveUser.uid == currentUser!!.uid || it.sendUser.uid == currentUser!!.uid)
-                    messageList.add(it)
-            }
-
-
         } catch (e: Exception) {
-            Log.e("toUser", "$e")
-
+            Log.d("SyncMessages", e.toString())
         }
-        recieverList.clear()
-
-        if (response != 200)
-            return Either.Failed("DB ERROR")
-        return Either.Success(messageList)
     }
 
-    override suspend fun getUserInfo(userId: String): Either<UserModel?> {
-        Log.d("SendMessage", "@@userINFo$userId")
+    override suspend fun getUserInfo(execId: String): Either<ExecutiveModel?> {
         var response = 0
-        var user: UserModel? = UserModel("", "", "")
-        val doc = firestore.collection("users").document(userId)
+        var exec: ExecutiveModel? = null
+        val doc = firestore.collection("executive").document(execId)
         try {
             val receiveSnap = Tasks.await(
                 doc.get()
@@ -137,17 +134,17 @@ class FirestoreDataRepository
                     }
 
             )
-            user = receiveSnap.toObject(UserModel::class.java)
+            exec = receiveSnap.toObject(ExecutiveModel::class.java)
 
 
         } catch (e: Exception) {
             Log.e("toUser", "$e")
 
         }
-        Log.d("SendMessage", "@@userINFo" + user.toString())
+        Log.d("SendMessage", "@@userINFo" + exec.toString())
         if (response != 200)
             return Either.Failed("DB ERROR")
-        return Either.Success(user)
+        return Either.Success(exec)
     }
 
     override suspend fun sendMessages(messageModel: MessageModel): Either<Boolean> {
@@ -166,7 +163,7 @@ class FirestoreDataRepository
                         status = Either.Failed("DB ERROR")
                     }
             )
-            val x = send.hashCode()
+            send.hashCode()
         } catch (e: Exception) {
             Log.e("toUser", "$e")
 
@@ -174,5 +171,25 @@ class FirestoreDataRepository
         return status
 
 
+    }
+
+    override suspend fun getExecMap() {
+        var map: MappedExecModel? = null
+        val doc = firestore.collection("mapping-exec-user").document(currentUser!!.uid)
+        try {
+            doc.addSnapshotListener { value, error ->
+                error.let {
+                    Log.d("ReceiveListERR", it.toString())
+                }
+                value.let {
+                    val data = value?.toObject(MappedExecModel::class.java)
+                    Log.d("ReceiveList!!!", data.toString())
+                    mapFlow.value = data
+
+                }
+            }
+        } catch (e: Exception) {
+            Log.d("getMessage", e.toString())
+        }
     }
 }

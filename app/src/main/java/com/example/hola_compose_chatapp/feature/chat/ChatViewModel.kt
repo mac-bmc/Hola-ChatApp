@@ -27,7 +27,7 @@ class ChatViewModel @Inject constructor(
     roomRepository: RoomRepository
 ) : ViewModel() {
     companion object {
-        var receiverUser = UserModel("101", "MAc", "")
+        var receiverUser:UserModel? = null
     }
 
     private val _isOpenHomeList = MutableLiveData<Boolean>(false)
@@ -58,10 +58,9 @@ class ChatViewModel @Inject constructor(
                         message,
                         Calendar.getInstance().time.toString(),
                         System.currentTimeMillis().toInt(),
-                        response.data,
+                        response.data.execId,
                         true,
-                        receiverUser,
-                        null
+                        receiverUser?.userId.toString(),
                     )
                     sendMessageUseCase.execute(msgModel)
                 }
@@ -76,7 +75,7 @@ class ChatViewModel @Inject constructor(
 
     fun getUserMessage() {
         viewModelScope.launch(Dispatchers.IO) {
-            when (val response = getUserMessagesUseCase.execute(receiverUser)) {
+            when (val response = getUserMessagesUseCase.execute(receiverUser!!)) {
                 is Either.Success -> {
                     _receiveMessageStatus.postValue(response.data)
                 }

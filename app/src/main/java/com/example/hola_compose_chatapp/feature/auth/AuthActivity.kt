@@ -68,15 +68,7 @@ class AuthActivity : ComponentActivity() {
             }
 
         }
-        authViewModel.isLoggedIn()
-        authViewModel.isLoggedIn.observe(this) { isLoggedIn ->
-            if (isLoggedIn) {
-                val intent = Intent(this, HomeActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                startActivity(intent)
-                finish()
-            }
-        }
+
     }
 
 }

@@ -28,7 +28,7 @@ fun ChatBubble(messageModel: MessageModel) {
     ) {
         Column(modifier = Modifier.align(Alignment.TopStart)) {
             Text(
-                text = messageModel.sendUser.userName, modifier = Modifier.padding(5.dp),
+                text = messageModel.sendUserId, modifier = Modifier.padding(5.dp),
                 style = TextStyle(color = colorResource(id = R.color.white), fontSize = 18.sp)
             )
             Row {

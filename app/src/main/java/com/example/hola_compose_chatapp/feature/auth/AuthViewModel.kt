@@ -3,7 +3,7 @@ package com.example.hola_compose_chatapp.feature.auth
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.hola_compose_chatapp.model.UserModel
+import com.example.hola_compose_chatapp.model.ExecutiveModel
 import com.example.hola_compose_chatapp.repositories.AuthRepository
 import com.example.hola_compose_chatapp.repositories.FirestoreRepository
 import com.example.hola_compose_chatapp.repositories.RoomRepository
@@ -33,13 +33,12 @@ class AuthViewModel @Inject constructor(
     private val syncReceivedMessageUseCase =
         SyncReceivedMessageUseCase(firestoreRepository, roomRepository)
     private val addUserToDbUseCase = AddUserToDBUseCase(firestoreRepository)
-    private val isUserLoggedIn = IsUserLoggedIn(authRepository)
+
     private val _signUpState = MutableLiveData<Either<String>>()
     val signUpState = _signUpState
     private val _loginState = MutableLiveData<Either<String>>()
     val loginState = _loginState
-    private val _isLoggedIn = MutableLiveData<Boolean>()
-    val isLoggedIn = _isLoggedIn
+
     private val _userSyncStatus = MutableLiveData<Either<Any>>()
     val userSyncStatus = _userSyncStatus
     private val _messageSyncStatus = MutableLiveData<Either<Any>>()
@@ -52,10 +51,10 @@ class AuthViewModel @Inject constructor(
             when (val response = signUpUseCase.execute(email, password)) {
                 is Either.Success -> {
                     _signUpState.postValue(response)
-                    syncHolaUsers()
+                    //syncHolaUsers()
                     addUserToDB(
-                        UserModel(
-                            getCurrentUserUseCase.executeGetUserUid(), email, ""
+                        ExecutiveModel(
+                            getCurrentUserUseCase.executeGetUserUid(), "", email, "", false
                         )
                     )
                 }
@@ -73,16 +72,11 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun isLoggedIn() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _isLoggedIn.postValue(isUserLoggedIn.execute())
-        }
 
-    }
 
-    private fun addUserToDB(userModel: UserModel) {
+    private fun addUserToDB(execModel: ExecutiveModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            addUserToDbUseCase.execute(userModel)
+            addUserToDbUseCase.execute(execModel)
         }
     }
 
@@ -94,7 +88,11 @@ class AuthViewModel @Inject constructor(
 
     fun syncMessages() {
         viewModelScope.launch(Dispatchers.IO) {
-            _messageSyncStatus.postValue(syncReceivedMessageUseCase.execute())
+           // syncReceivedMessageUseCase.execute()
+            /*syncReceivedMessageUseCase.syncStatus.collect {
+                _messageSyncStatus.postValue(it)
+            }*/
+
         }
     }
 
